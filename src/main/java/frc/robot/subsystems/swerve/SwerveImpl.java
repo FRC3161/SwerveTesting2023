@@ -12,6 +12,6 @@ public class SwerveImpl {
 	public List<SwerveModule> swerveModules;
 
 	public SwerveImpl() {
-		this.swerveModules = SwerveModule.loadModules(Constants.serveModules);
+		this.swerveModules = SwerveModule.loadModules(Constants.swerveModules);
 	}
 }
