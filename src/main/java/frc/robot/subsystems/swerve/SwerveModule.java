@@ -8,15 +8,15 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.constants.SwerveModuleConstants;
-import frc.robot.motors.AbsoluteMotor;
+import frc.robot.motors.PodMotor;
 import frc.robot.motors.RelativeMotor;
 
 public class SwerveModule {
     public int number;
     RelativeMotor wheel;
-    AbsoluteMotor pod;
+    PodMotor pod;
 
-    public SwerveModule(int number, RelativeMotor wheel, AbsoluteMotor pod) {
+    public SwerveModule(int number, RelativeMotor wheel, PodMotor pod) {
         this.number = number;
         this.wheel = wheel;
         this.pod = pod;
@@ -26,7 +26,7 @@ public class SwerveModule {
         this.number = number;
         this.wheel = new RelativeMotor(new CANSparkMax(constants.wheelController, MotorType.kBrushless),
                 constants.wheelPID);
-        this.pod = new AbsoluteMotor(new CANSparkMax(constants.podController, MotorType.kBrushless), constants.podPID,
+        this.pod = new PodMotor(new CANSparkMax(constants.podController, MotorType.kBrushless), constants.podPID,
                 new WPI_CANCoder(constants.podEncoder));
     }
 
