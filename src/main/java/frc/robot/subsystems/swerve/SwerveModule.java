@@ -16,10 +16,14 @@ public class SwerveModule {
     RelativeMotor wheel;
     PodMotor pod;
 
-    public SwerveModule(int number, RelativeMotor wheel, PodMotor pod) {
+    private double angleOffset;
+    private double lastAngle;
+
+    public SwerveModule(int number, RelativeMotor wheel, PodMotor pod, double angleOffset) {
         this.number = number;
         this.wheel = wheel;
         this.pod = pod;
+        this.angleOffset = angleOffset;
     }
 
     public SwerveModule(int number, SwerveModuleConstants constants) {
@@ -28,6 +32,7 @@ public class SwerveModule {
                 constants.wheelPID);
         this.pod = new PodMotor(new CANSparkMax(constants.podController, MotorType.kBrushless), constants.podPID,
                 new WPI_CANCoder(constants.podEncoder));
+        this.angleOffset = constants.angleOffset;
     }
 
     public static List<SwerveModule> loadModules(SwerveModuleConstants[] constants) {
