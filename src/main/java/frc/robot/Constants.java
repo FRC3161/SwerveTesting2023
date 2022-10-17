@@ -22,7 +22,7 @@ public class Constants {
         public static final double driveKA = 0.27;
         public static final boolean canCoderInvert = false;
         public static final int angleContinuousCurrentLimit = 20;
-        public static final int driveContinuousCurrentLimit = 80;
+        public static final int driveContinuousCurrentLimit = 35;
         public static final boolean angleInvert = false;
         public static final IdleMode angleNeutralMode = IdleMode.kBrake;
         public static final double angleConversionFactor = 360.0 / 12.8;
