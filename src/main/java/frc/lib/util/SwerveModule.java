@@ -39,6 +39,7 @@ public class SwerveModule {
   public final PIDConstants anglePID;
   public final PIDConstants drivePID;
   public final SVAConstants driveSVA;
+  private boolean hasBeenReset = false;
 
   public SimpleMotorFeedforward feedforward;
 

@@ -14,13 +14,15 @@ public class TeleopSwerve extends CommandBase {
   private DoubleSupplier strafeSup;
   private DoubleSupplier rotationSup;
   private BooleanSupplier robotCentricSup;
+  private DoubleSupplier POVSup;
 
   public TeleopSwerve(
       Swerve s_Swerve,
       DoubleSupplier translationSup,
       DoubleSupplier strafeSup,
       DoubleSupplier rotationSup,
-      BooleanSupplier robotCentricSup) {
+      BooleanSupplier robotCentricSup,
+      DoubleSupplier POVSup) {
     this.s_Swerve = s_Swerve;
     addRequirements(s_Swerve);
 
@@ -28,20 +30,32 @@ public class TeleopSwerve extends CommandBase {
     this.strafeSup = strafeSup;
     this.rotationSup = rotationSup;
     this.robotCentricSup = robotCentricSup;
+    this.POVSup = POVSup;
+  }
+
+  @Override
+  public void initialize() {
+    this.s_Swerve.resetHold();
   }
 
   @Override
   public void execute() {
+
     /* Get Values, Deadband */
-    double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Swerve.stickDeadband);
-    double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Swerve.stickDeadband);
-    double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Swerve.stickDeadband);
+    double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Swerve.stickDeadband) * 0.1;
+    double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Swerve.stickDeadband) * 0.1;
+    double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Swerve.stickDeadband) * 0.1;
+    double POVVal = this.POVSup.getAsDouble();
+
+    if (POVVal != -1) {
+      this.s_Swerve.setHold(POVVal);
+    }
 
     /* Drive */
     s_Swerve.drive(
         new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
         rotationVal * Constants.Swerve.maxAngularVelocity,
         !robotCentricSup.getAsBoolean(),
-        false); // change to ture for percent output control mode
+        true); // change to ture for percent output control mode
   }
 }
