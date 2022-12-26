@@ -9,7 +9,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class TeleopSwerve extends CommandBase {
-  private Swerve s_Swerve;
+  private Swerve swerve;
   private DoubleSupplier translationSup;
   private DoubleSupplier strafeSup;
   private DoubleSupplier rotationSup;
@@ -17,16 +17,31 @@ public class TeleopSwerve extends CommandBase {
   private DoubleSupplier POVSup;
   private BooleanSupplier rightBumper;
 
+  /**
+   * The default command for Swerve and which is being used for driving, if any
+   * other command overrides this one,
+   * all the driving abilities will be suspended until it's back on the command
+   * scheduler
+   * 
+   * @param swerve          An instance of the swerve subsustem
+   * @param translationSup  the value of translation axis on the controller
+   * @param strafeSup       the value of starfe axis on the controller
+   * @param rotationSup     the rotation value
+   * @param robotCentricSup whether or not the robot is driving relative to the
+   *                        field or relative to itself
+   * @param POVSup          the D Pad on the controller
+   * @param rightBumper     whether or not the rightBumper is held down
+   */
   public TeleopSwerve(
-      Swerve s_Swerve,
+      Swerve swerve,
       DoubleSupplier translationSup,
       DoubleSupplier strafeSup,
       DoubleSupplier rotationSup,
       BooleanSupplier robotCentricSup,
       DoubleSupplier POVSup,
       BooleanSupplier rightBumper) {
-    this.s_Swerve = s_Swerve;
-    addRequirements(s_Swerve);
+    this.swerve = swerve;
+    addRequirements(swerve);
 
     this.translationSup = translationSup;
     this.strafeSup = strafeSup;
@@ -38,7 +53,8 @@ public class TeleopSwerve extends CommandBase {
 
   @Override
   public void initialize() {
-    this.s_Swerve.resetHold();
+    // Set the hold position to the current orientation of the robot
+    this.swerve.resetHold();
   }
 
   @Override
@@ -51,15 +67,18 @@ public class TeleopSwerve extends CommandBase {
     double POVVal = this.POVSup.getAsDouble();
 
     if (POVVal != -1) {
-      this.s_Swerve.setHold(POVVal);
+      // set the hold position of the robot to whatever orientation is chosen by the
+      // driver
+      this.swerve.setHold(POVVal);
     }
 
     /* Drive */
-    s_Swerve.drive(
+    swerve.drive(
         new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
         rotationVal * Constants.Swerve.maxAngularVelocity,
         !robotCentricSup.getAsBoolean(),
-        true, // change to true for percent output control mode
+        true, // True -> driving based on percent output, False -> driving based on PID,
+              // FeedForward
         this.rightBumper.getAsBoolean());
   }
 }

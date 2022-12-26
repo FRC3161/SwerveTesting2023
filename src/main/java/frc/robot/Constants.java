@@ -5,24 +5,35 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.XboxController;
 import frc.lib.util.PIDConstants;
 import frc.lib.util.SVAConstants;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
 
-  public static final class Dashboard {
-    public static final ShuffleboardTab generalTab = Shuffleboard.getTab("General");
-    public static final ShuffleboardTab swerveTab = Shuffleboard.getTab("Swerve");
+  public static final class Vision {
+    public static final String cameraName = "gloworm";
+  }
+
+  public static final class Operators {
+    public static final int driver = 0;
   }
 
   public static final class Swerve {
-    public static final double stickDeadband = 0.1;
 
+    /* Drive Controls */
+    public static final double stickDeadband = 0.1;
+    public static final int translationAxis = XboxController.Axis.kRightY.value;
+    public static final int strafeAxis = XboxController.Axis.kRightX.value;
+    public static final int rotationAxis = XboxController.Axis.kLeftX.value;
+    public static final int zeroGyro = XboxController.Button.kStart.value;
+    public static final int robotCentric = XboxController.Button.kLeftBumper.value;
+
+    /* Gyro */
     public static final int pigeonID = 21;
     public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
+    public static final String pigeonCanBUS = "canivore3161";
 
     /* Drivetrain Constants */
     public static final double trackWidth = Units.inchesToMeters(23);
@@ -36,12 +47,15 @@ public final class Constants {
     public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
     public static final double angleGearRatio = ((150 / 7) / 1.0); // 150/7:1
 
+    /* Custom PID Controllers */
+    public static final PIDConstants robotRotationPID = new PIDConstants(0.1, 0, 0.00005);
+    public static final PIDConstants targetRotationPID = new PIDConstants(6, 0, 0.05);
+
     public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
-        new Translation2d(wheelBase / 2.0, trackWidth / 2.0), // Front Left
-        new Translation2d(wheelBase / 2.0, -trackWidth / 2.0), // Front Right
-        new Translation2d(-wheelBase / 2.0, trackWidth / 2.0), // Back Left
-        new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0) // Back Right
-    );
+        new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
+        new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
+        new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
+        new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
 
     /* Swerve Compensation */
     public static final double voltageComp = 12.0;
@@ -50,26 +64,9 @@ public final class Constants {
     public static final int angleContinuousCurrentLimit = 20;
     public static final int driveContinuousCurrentLimit = 40;
 
-    /* Angle Motor PID Values */
-    public static double angleKP = 0.01;
-    public static double angleKI = 0.0;
-    public static double angleKD = 0.005;
-    public static final double angleKFF = 0.0;
-
-    /* Drive Motor PID Values */
-    public static final double driveKP = 0.1;
-    public static final double driveKI = 0.0;
-    public static final double driveKD = 0.0;
-    public static final double driveKFF = 0.0;
-
-    /* Drive Motor Characterization Values */
-    public static final double driveKS = 0.667;
-    public static final double driveKV = 2.44;
-    public static final double driveKA = 0.27;
-
     /* Drive Motor Conversion Factors */
     public static final double driveConversionVelocityFactor = ((wheelDiameter * Math.PI) / driveGearRatio) / 60.0;
-    public static final double angleConversionFactor = 360.0 / (150 / 7);
+    public static final double angleConversionFactor = 360.0 / angleGearRatio;
 
     /* Swerve Profiling Values */
     public static final double maxSpeed = 4.5; // meters per second
@@ -86,15 +83,16 @@ public final class Constants {
     /* Angle Encoder Invert */
     public static final boolean canCoderInvert = false;
 
-    public static final String[] moduleNames = { "Front Left", "Front Right", "Back Left", "Back Right" };
-
     /* Module Specific Constants */
+    public static final String[] moduleNames = { "Front Left", "Front Right", "Back Left", "Back Right" }; // module #0,
+                                                                                                           // #1, #2, #3
+
     /* Front Left Module - Module 0 */
     public static final class Mod0 {
       public static final int driveMotorID = 2;
       public static final int angleMotorID = 1;
       public static final int canCoderID = 23;
-      public static final String cancoderCANBUS = "canivore3161";
+      public static final String cancoderCANBUS = "canivore3161"; // change to "rio" if it's on rio
       public static final double angleOffset = 146.0;
       public static final PIDConstants anglePID = new PIDConstants(0.02, 0.0, 0.005);
       public static final PIDConstants drivePID = new PIDConstants(0.1, 0.0, 0.000);

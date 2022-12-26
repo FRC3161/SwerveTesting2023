@@ -1,7 +1,5 @@
 package frc.lib.util;
 
-import java.util.Map;
-
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -11,10 +9,6 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.math.OnboardModuleState;
 import frc.lib.util.CANCoderUtil.CCUsage;
@@ -23,28 +17,31 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 
 public class SwerveModule {
+  /* Module details */
   public int moduleNumber;
-  private double angleOffset;
-  private double lastAngle;
 
+  /* Motors */
   private CANSparkMax angleMotor;
   private CANSparkMax driveMotor;
 
+  /* Encoders and their values */
   private RelativeEncoder driveEncoder;
   private RelativeEncoder integratedAngleEncoder;
   private CANCoder angleEncoder;
+  private double lastAngle;
+  private double angleOffset;
 
+  /* Controllers */
   public final SparkMaxPIDController driveController;
   public final SparkMaxPIDController angleController;
   public final PIDConstants anglePID;
   public final PIDConstants drivePID;
   public final SVAConstants driveSVA;
-  private boolean hasBeenReset = false;
-
   public SimpleMotorFeedforward feedforward;
 
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
+
     angleOffset = moduleConstants.angleOffset;
     this.anglePID = moduleConstants.anglePID;
     this.drivePID = moduleConstants.drivePID;
@@ -145,7 +142,7 @@ public class SwerveModule {
     angleMotor.setIdleMode(Constants.Swerve.angleNeutralMode);
     integratedAngleEncoder.setPositionConversionFactor(Constants.Swerve.angleConversionFactor);
     this.anglePID.applyPID(this.angleController);
-    angleController.setFF(Constants.Swerve.angleKFF);
+    angleController.setFF(0);
     angleMotor.enableVoltageCompensation(Constants.Swerve.voltageComp);
   }
 
@@ -157,7 +154,7 @@ public class SwerveModule {
     driveMotor.setIdleMode(Constants.Swerve.driveNeutralMode);
     driveEncoder.setVelocityConversionFactor(Constants.Swerve.driveConversionVelocityFactor);
     this.drivePID.applyPID(this.driveController);
-    driveController.setFF(Constants.Swerve.driveKFF);
+    driveController.setFF(0);
     this.feedforward = driveSVA.getController();
     driveMotor.enableVoltageCompensation(Constants.Swerve.voltageComp);
     driveEncoder.setPosition(0.0);
