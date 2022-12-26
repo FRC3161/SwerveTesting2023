@@ -15,6 +15,7 @@ public class TeleopSwerve extends CommandBase {
   private DoubleSupplier rotationSup;
   private BooleanSupplier robotCentricSup;
   private DoubleSupplier POVSup;
+  private BooleanSupplier rightBumper;
 
   public TeleopSwerve(
       Swerve s_Swerve,
@@ -22,7 +23,8 @@ public class TeleopSwerve extends CommandBase {
       DoubleSupplier strafeSup,
       DoubleSupplier rotationSup,
       BooleanSupplier robotCentricSup,
-      DoubleSupplier POVSup) {
+      DoubleSupplier POVSup,
+      BooleanSupplier rightBumper) {
     this.s_Swerve = s_Swerve;
     addRequirements(s_Swerve);
 
@@ -31,6 +33,7 @@ public class TeleopSwerve extends CommandBase {
     this.rotationSup = rotationSup;
     this.robotCentricSup = robotCentricSup;
     this.POVSup = POVSup;
+    this.rightBumper = rightBumper;
   }
 
   @Override
@@ -56,6 +59,7 @@ public class TeleopSwerve extends CommandBase {
         new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
         rotationVal * Constants.Swerve.maxAngularVelocity,
         !robotCentricSup.getAsBoolean(),
-        true); // change to ture for percent output control mode
+        true, // change to true for percent output control mode
+        this.rightBumper.getAsBoolean());
   }
 }
