@@ -97,8 +97,8 @@ public final class Constants {
       public static final String cancoderCANBUS = "canivore3161";
       public static final double angleOffset = 146.0;
       public static final PIDConstants anglePID = new PIDConstants(0.02, 0.0, 0.005);
-      public static final PIDConstants drivePID = new PIDConstants(0.0, 0.0, 0.000);
-      public static final SVAConstants driveSVA = new SVAConstants(0.667, 2.44, 0.27);
+      public static final PIDConstants drivePID = new PIDConstants(0.1, 0.0, 0.000);
+      public static final SVAConstants driveSVA = new SVAConstants(0.13522, 2.6797, 0.17176);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, cancoderCANBUS, angleOffset, anglePID, drivePID, driveSVA);
     }
@@ -111,8 +111,8 @@ public final class Constants {
       public static final String cancoderCANBUS = "canivore3161";
       public static final double angleOffset = 324.0;
       public static final PIDConstants anglePID = new PIDConstants(0.02, 0.0, 0.005);
-      public static final PIDConstants drivePID = new PIDConstants(0.1, 0.0, 0.005);
-      public static final SVAConstants driveSVA = new SVAConstants(0.667, 2.44, 0.27);
+      public static final PIDConstants drivePID = new PIDConstants(0.1, 0.0, 0.000);
+      public static final SVAConstants driveSVA = new SVAConstants(0.13522, 2.6797, 0.17176);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, cancoderCANBUS, angleOffset, anglePID, drivePID, driveSVA);
     }
@@ -125,8 +125,8 @@ public final class Constants {
       public static final String cancoderCANBUS = "canivore3161";
       public static final double angleOffset = 290.0;
       public static final PIDConstants anglePID = new PIDConstants(0.02, 0.0, 0.005);
-      public static final PIDConstants drivePID = new PIDConstants(0.1, 0.0, 0.005);
-      public static final SVAConstants driveSVA = new SVAConstants(0.667, 2.44, 0.27);
+      public static final PIDConstants drivePID = new PIDConstants(0.1, 0.0, 0.000);
+      public static final SVAConstants driveSVA = new SVAConstants(0.13522, 2.6797, 0.17176);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, cancoderCANBUS, angleOffset, anglePID, drivePID, driveSVA);
     }
@@ -139,8 +139,8 @@ public final class Constants {
       public static final String cancoderCANBUS = "canivore3161";
       public static final double angleOffset = 90.0;
       public static final PIDConstants anglePID = new PIDConstants(0.02, 0.0, 0.005);
-      public static final PIDConstants drivePID = new PIDConstants(0.1, 0.0, 0.005);
-      public static final SVAConstants driveSVA = new SVAConstants(0.667, 2.44, 0.27);
+      public static final PIDConstants drivePID = new PIDConstants(0.1, 0.0, 0.000);
+      public static final SVAConstants driveSVA = new SVAConstants(0.13522, 2.6797, 0.17176);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, cancoderCANBUS, angleOffset, anglePID, drivePID, driveSVA);
     }
