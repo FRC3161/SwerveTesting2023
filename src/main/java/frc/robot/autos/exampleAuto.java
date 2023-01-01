@@ -8,50 +8,48 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
-import java.util.List;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.StopEvent;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+
+import org.photonvision.common.hardware.VisionLEDMode;
 
 public class exampleAuto extends SequentialCommandGroup {
-  public exampleAuto(Swerve s_Swerve) {
-    TrajectoryConfig config = new TrajectoryConfig(
-        Constants.AutoConstants.kMaxSpeedMetersPerSecond,
-        Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-            .setKinematics(Constants.Swerve.swerveKinematics);
+    public exampleAuto(Swerve s_Swerve) {
+        ArrayList<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("test",
+                new PathConstraints(Constants.AutoConstants.kMaxSpeedMetersPerSecond,
+                        Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared));
 
-    // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(1, 0)),
-        // List.of(new Translation2d(0.5, 0.5), new Translation2d(1, -0.5)),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(1, 0, Rotation2d.fromDegrees(90)),
-        config);
+        HashMap<String, Command> eventMap = new HashMap<>();
 
-    var thetaController = new ProfiledPIDController(
-        Constants.AutoConstants.kPThetaController,
-        0,
-        0,
-        Constants.AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(s_Swerve::getPose, s_Swerve::resetOdometry,
+                Constants.Swerve.swerveKinematics, new PIDConstants(0.3, 0, 0.05),
+                new PIDConstants(0.2, 0, 0.05), s_Swerve::setModuleStates,
+                eventMap,
+                s_Swerve);
 
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        exampleTrajectory,
-        s_Swerve::getPose,
-        Constants.Swerve.swerveKinematics,
-        new PIDController(Constants.AutoConstants.kPXController, 0, 0),
-        new PIDController(Constants.AutoConstants.kPYController, 0, 0),
-        thetaController,
-        s_Swerve::setModuleStates,
-        s_Swerve);
-
-    addCommands(
-        new InstantCommand(() -> s_Swerve.resetOdometry(exampleTrajectory.getInitialPose())),
-        swerveControllerCommand);
-  }
+        addCommands(new InstantCommand(() -> s_Swerve.resetOdometry(pathGroup.get(0).getInitialHolonomicPose())),
+                autoBuilder.followPathWithEvents(pathGroup.get(0)),
+                new InstantCommand(() -> s_Swerve.camera.setLED(VisionLEDMode.kOn)),
+                autoBuilder.followPathWithEvents(pathGroup.get(1)),
+                new InstantCommand(() -> s_Swerve.camera.setLED(VisionLEDMode.kOff)));
+    }
 }

@@ -41,9 +41,9 @@ public class RobotContainer {
     s_Swerve.setDefaultCommand(
         new TeleopSwerve(
             s_Swerve,
-            () -> driver.getRawAxis(Constants.Swerve.translationAxis),
-            () -> driver.getRawAxis(Constants.Swerve.strafeAxis),
-            () -> driver.getRawAxis(Constants.Swerve.rotationAxis),
+            () -> -driver.getRawAxis(Constants.Swerve.translationAxis),
+            () -> -driver.getRawAxis(Constants.Swerve.strafeAxis),
+            () -> -driver.getRawAxis(Constants.Swerve.rotationAxis),
             () -> robotCentric.get(),
             () -> driver.getPOV(),
             () -> driver.getRightBumper()));
@@ -54,7 +54,6 @@ public class RobotContainer {
 
   /** Actions that we want to do when the robot is disabled. */
   public void disabledActions() {
-    s_Swerve.resetModuleZeros();
   }
 
   /**

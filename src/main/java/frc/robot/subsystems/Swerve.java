@@ -5,7 +5,6 @@ import java.util.List;
 import com.ctre.phoenix.sensors.Pigeon2;
 
 import org.photonvision.PhotonCamera;
-import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -46,7 +45,7 @@ public class Swerve extends SubsystemBase {
   private double rotationControllerSpeed = 0.0;
   private final PIDController robotRotationPID;
   private final PIDController targetRotationPID;
-  private final PhotonCamera camera = new PhotonCamera(Constants.Vision.cameraName);
+  public final PhotonCamera camera = new PhotonCamera(Constants.Vision.cameraName);
 
   public Swerve() {
     /* Gyro setup */
@@ -148,7 +147,7 @@ public class Swerve extends SubsystemBase {
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(
                 translation.getX(), translation.getY(),
-                rotation - missalignment,
+                rotation + (Constants.Swerve.driveInvert ? missalignment : -missalignment),
                 getYaw())
             : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
 
@@ -249,6 +248,7 @@ public class Swerve extends SubsystemBase {
   @Override
   public void periodic() {
     swerveOdometry.update(getYaw(), getStates());
+    SmartDashboard.putNumber("yaw", getYaw().getDegrees());
 
     for (SwerveModule mod : mSwerveMods) {
       mod.updateDashboardValues();
