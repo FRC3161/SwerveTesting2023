@@ -1,10 +1,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Constants.RobotModes;
 import frc.robot.subsystems.Swerve;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -64,14 +66,34 @@ public class TeleopSwerve extends CommandBase {
 
   @Override
   public void execute() {
+    double translationVal, strafeVal, rotationVal;
 
     /* Get Values, Deadband */
-    double translationVal = translationLimiter
-        .calculate(MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Swerve.stickDeadband));
-    double strafeVal = strafeLimiter
-        .calculate(MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Swerve.stickDeadband));
-    double rotationVal = rotationLimiter
-        .calculate(MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Swerve.stickDeadband));
+    switch (Constants.Operators.driverMode) {
+      case Raw:
+        translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Swerve.stickDeadband);
+        strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Swerve.stickDeadband);
+        rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Swerve.stickDeadband);
+        break;
+
+      case Slew:
+        translationVal = translationLimiter
+            .calculate(MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Swerve.stickDeadband));
+        strafeVal = strafeLimiter
+            .calculate(MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Swerve.stickDeadband));
+        rotationVal = rotationLimiter
+            .calculate(MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Swerve.stickDeadband));
+        break;
+      default:
+        translationVal = strafeVal = rotationVal = 0;
+        break;
+    }
+
+    if (Constants.robotMode == RobotModes.Testing) {
+      translationVal *= 0.2;
+      strafeVal *= 0.2;
+      rotationVal *= 0.2;
+    }
 
     double POVVal = this.POVSup.getAsDouble();
 

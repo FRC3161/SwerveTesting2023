@@ -1,5 +1,8 @@
 package frc.robot;
 
+import java.util.ResourceBundle.Control;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -12,12 +15,25 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
 
+  public static enum ControlModes {
+    Slew,
+    Raw,
+  }
+
+  public static enum RobotModes {
+    Competition,
+    Testing
+  }
+
+  public static final RobotModes robotMode = RobotModes.Testing;
+
   public static final class Vision {
     public static final String cameraName = "gloworm";
   }
 
   public static final class Operators {
     public static final int driver = 0;
+    public static final ControlModes driverMode = ControlModes.Raw;
   }
 
   public static final class Swerve {
@@ -36,16 +52,16 @@ public final class Constants {
     public static final String pigeonCanBUS = "canivore3161";
 
     /* Drivetrain Constants */
-    public static final double trackWidth = Units.inchesToMeters(23);
-    public static final double wheelBase = Units.inchesToMeters(23);
-    public static final double wheelDiameter = Units.inchesToMeters(4);
+    public static final double trackWidth = Units.inchesToMeters(23.0);
+    public static final double wheelBase = Units.inchesToMeters(23.0);
+    public static final double wheelDiameter = Units.inchesToMeters(4.0);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
 
     public static final double openLoopRamp = 0.25;
     public static final double closedLoopRamp = 0.0;
 
     public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
-    public static final double angleGearRatio = ((150 / 7) / 1.0); // 150/7:1
+    public static final double angleGearRatio = 150.0 / 7.0; // 150/7:1
 
     /* Custom PID Controllers */
     public static final PIDConstants robotRotationPID = new PIDConstants(0.1, 0, 0.00005);
@@ -72,9 +88,9 @@ public final class Constants {
     /* Swerve Profiling Values */
     public static final double maxSpeed = 4.5; // meters per second
     public static final double maxAngularVelocity = 11.5;
-    public static final double translationChangeLimit = 3.0;
-    public static final double strafeChangeLimit = 3.0;
-    public static final double rotationChangeLimit = 3.0;
+    public static final double translationChangeLimit = 20.0;
+    public static final double strafeChangeLimit = 20.0;
+    public static final double rotationChangeLimit = 20.0;
 
     /* Neutral Modes */
     public static final IdleMode angleNeutralMode = IdleMode.kBrake;

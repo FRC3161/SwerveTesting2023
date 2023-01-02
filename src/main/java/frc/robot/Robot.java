@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.config.CTREConfigs;
+import frc.robot.Constants.RobotModes;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -40,7 +41,9 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    PathPlannerServer.startServer(5811);
+    if (Constants.robotMode == RobotModes.Testing) {
+      PathPlannerServer.startServer(5811);
+    }
   }
 
   /**

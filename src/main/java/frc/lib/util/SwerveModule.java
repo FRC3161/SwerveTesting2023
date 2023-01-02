@@ -169,6 +169,13 @@ public class SwerveModule {
     lastAngle = angle;
   }
 
+  public void goToHome() {
+    Rotation2d angle = getAngle();
+    angleController.setReference(angle.getDegrees() - angle.getDegrees() % 360,
+        ControlType.kPosition);
+    lastAngle = angle.getDegrees() - angle.getDegrees() % 360;
+  }
+
   public Rotation2d getCanCoder() {
     return Rotation2d.fromDegrees(this.angleEncoder.getAbsolutePosition());
   }
