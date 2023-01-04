@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -32,6 +33,7 @@ public class RobotContainer {
   /* Driver Buttons */
   private final JoystickButton zeroGyro = new JoystickButton(driver, Constants.Swerve.zeroGyro);
   private final JoystickButton robotCentric = new JoystickButton(driver, Constants.Swerve.robotCentric);
+  private final JoystickButton perpendicular = new JoystickButton(driver, XboxController.Button.kY.value);
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
@@ -69,11 +71,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     /* Driver Buttons */
     zeroGyro.whenPressed(
-        new SequentialCommandGroup(new InstantCommand(() -> s_Swerve.zeroGyro()), new InstantCommand(() -> {
-          for (SwerveModule module : s_Swerve.mSwerveMods) {
-            module.goToHome();
-          }
-        })));
+        new InstantCommand(() -> s_Swerve.zeroGyro()));
+    perpendicular.whenHeld(new PerpendicularTarget(s_Swerve));
   }
 
   /**

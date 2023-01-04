@@ -41,9 +41,9 @@ public class Swerve extends SubsystemBase {
   public SwerveDriveOdometry swerveOdometry;
   public SwerveModule[] mSwerveMods;
   public Pigeon2 gyro;
-  private Rotation2d orientationWhenReleased;
+  public Rotation2d orientationWhenReleased;
   private double rotationControllerSpeed = 0.0;
-  private final PIDController robotRotationPID;
+  public final PIDController robotRotationPID;
   private final PIDController targetRotationPID;
   public final PhotonCamera camera = new PhotonCamera(Constants.Vision.cameraName);
 
@@ -58,7 +58,6 @@ public class Swerve extends SubsystemBase {
     this.robotRotationPID.enableContinuousInput(-180, 180);
 
     this.targetRotationPID = Constants.Swerve.targetRotationPID.getController();
-    this.targetRotationPID.enableContinuousInput(2, 2);
 
     /* Swerve modules setup */
     swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw());
