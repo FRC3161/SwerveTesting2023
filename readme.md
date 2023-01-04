@@ -23,8 +23,16 @@ The project involves building a swerve robot for the First Robotics Competition 
 
 ## Demo
 ### Auto
+![image (2)](https://user-images.githubusercontent.com/34334797/210486384-522d98f0-f78d-4ef9-8a23-fc6518c6ab43.png)
+https://user-images.githubusercontent.com/34334797/210486603-7e08cbec-7a22-4a9b-ad90-45ce886b5bfb.mp4
+
 ### Vision
+https://user-images.githubusercontent.com/34334797/210486683-242ebc79-953b-423c-97c5-7192d4d101cf.mp4
+https://user-images.githubusercontent.com/34334797/210486662-3d267d20-daa2-468e-8705-0b47538685da.mp4
+
 ### Teleop
+https://user-images.githubusercontent.com/34334797/210486770-7e1728c3-9f2b-439c-a8ca-7e0606c730f5.mp4
+https://user-images.githubusercontent.com/34334797/210486779-3ee382da-4185-445b-95fb-fbd038c385cd.mp4
 
 ## Setup
 Setup would be straight forward if your team is using the same hardware as long as you put in the correct values based on your robot in the Constants.java
