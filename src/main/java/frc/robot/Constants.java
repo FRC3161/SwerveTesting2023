@@ -1,7 +1,11 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMax.IdleMode;
+
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -26,6 +30,7 @@ public final class Constants {
 
   public static final class Vision {
     public static final String cameraName = "gloworm";
+    public static final Translation3d cameraPosition = new Translation3d(0.32, 0, 0);
   }
 
   public static final class Operators {
@@ -63,7 +68,7 @@ public final class Constants {
     /* Custom PID Controllers */
     public static final PIDConstants robotRotationPID = new PIDConstants(0.1, 0, 0.00005);
     public static final PIDConstants targetRotationPID = new PIDConstants(6, 0, 0.05);
-    public static final PIDConstants targetTranslationPID = new PIDConstants(2, 0, 0.005);
+    public static final PIDConstants targetTranslationPID = new PIDConstants(4, 0, 0.005);
 
     public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
         new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
@@ -168,9 +173,8 @@ public final class Constants {
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-    public static final double kPXController = 0.1;
-    public static final double kPYController = 0.1;
-    public static final double kPThetaController = 0.1;
+    public static final PIDConstants translationPID = new PIDConstants(0.2, 0, 0.05);
+    public static final PIDConstants rotationPID = new PIDConstants(0.1, 0, 0.05);
 
     // Constraint for the motion profilied robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(

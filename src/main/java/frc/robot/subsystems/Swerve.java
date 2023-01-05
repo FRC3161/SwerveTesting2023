@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import java.util.List;
 
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -19,6 +21,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.SwerveModule;
 import frc.robot.Constants;
@@ -158,6 +163,28 @@ public class Swerve extends SubsystemBase {
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
     }
+  }
+
+  public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
+    var commandGroup = new SequentialCommandGroup();
+
+    commandGroup.addCommands(new InstantCommand(() -> {
+      // Reset odometry for the first path you run during auto
+      if (isFirstPath) {
+        this.resetOdometry(traj.getInitialHolonomicPose());
+      }
+    }),
+        new PPSwerveControllerCommand(
+            traj,
+            this::getPose, // Pose supplier
+            Constants.Swerve.swerveKinematics, // SwerveDriveKinematics
+            Constants.AutoConstants.translationPID.getController(),
+            Constants.AutoConstants.translationPID.getController(),
+            Constants.AutoConstants.rotationPID.getController(),
+            this::setModuleStates, // Module states consumer
+            this // Requires this drive subsystem
+        ));
+    return commandGroup;
   }
 
   /**
