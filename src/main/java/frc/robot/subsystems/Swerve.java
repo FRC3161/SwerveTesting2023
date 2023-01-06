@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -65,8 +66,7 @@ public class Swerve extends SubsystemBase {
     this.targetRotationPID = Constants.Swerve.targetRotationPID.getController();
 
     /* Swerve modules setup */
-    swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw());
-
+    swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), this.getPositions());
     mSwerveMods = new SwerveModule[] {
         new SwerveModule(0, Constants.Swerve.Mod0.constants),
         new SwerveModule(1, Constants.Swerve.Mod1.constants),
@@ -217,7 +217,7 @@ public class Swerve extends SubsystemBase {
    * @param pose
    */
   public void resetOdometry(Pose2d pose) {
-    swerveOdometry.resetPosition(pose, getYaw());
+    swerveOdometry.resetPosition(getYaw(), getPositions(), pose);
   }
 
   /** Reset the module encoder values */
@@ -238,6 +238,15 @@ public class Swerve extends SubsystemBase {
       states[mod.moduleNumber] = mod.getState();
     }
     return states;
+  }
+
+  public SwerveModulePosition[] getPositions() {
+    SwerveModulePosition[] positions = new SwerveModulePosition[4];
+    for (SwerveModule mod : this.mSwerveMods) {
+      positions[mod.moduleNumber] = mod.getPosition();
+    }
+
+    return positions;
   }
 
   /** Reset the gyro and position hold */
@@ -273,7 +282,7 @@ public class Swerve extends SubsystemBase {
 
   @Override
   public void periodic() {
-    swerveOdometry.update(getYaw(), getStates());
+    swerveOdometry.update(getYaw(), getPositions());
     SmartDashboard.putNumber("yaw", getYaw().getDegrees());
 
     for (SwerveModule mod : mSwerveMods) {
