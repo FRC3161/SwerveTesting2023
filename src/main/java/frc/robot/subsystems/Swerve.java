@@ -66,13 +66,13 @@ public class Swerve extends SubsystemBase {
     this.targetRotationPID = Constants.Swerve.targetRotationPID.getController();
 
     /* Swerve modules setup */
-    swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), this.getPositions());
     mSwerveMods = new SwerveModule[] {
-        new SwerveModule(0, Constants.Swerve.Mod0.constants),
-        new SwerveModule(1, Constants.Swerve.Mod1.constants),
-        new SwerveModule(2, Constants.Swerve.Mod2.constants),
-        new SwerveModule(3, Constants.Swerve.Mod3.constants)
+      new SwerveModule(0, Constants.Swerve.Mod0.constants),
+      new SwerveModule(1, Constants.Swerve.Mod1.constants),
+      new SwerveModule(2, Constants.Swerve.Mod2.constants),
+      new SwerveModule(3, Constants.Swerve.Mod3.constants)
     };
+    swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), this.getPositions());
   }
 
   /**
@@ -242,7 +242,8 @@ public class Swerve extends SubsystemBase {
 
   public SwerveModulePosition[] getPositions() {
     SwerveModulePosition[] positions = new SwerveModulePosition[4];
-    for (SwerveModule mod : this.mSwerveMods) {
+    
+    for (SwerveModule mod : mSwerveMods) {
       positions[mod.moduleNumber] = mod.getPosition();
     }
 
