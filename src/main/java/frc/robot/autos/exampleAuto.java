@@ -7,8 +7,8 @@ import frc.robot.Constants;
 import frc.robot.commands.PerpendicularTarget;
 import frc.robot.subsystems.Swerve;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -20,7 +20,7 @@ import org.photonvision.common.hardware.VisionLEDMode;
 
 public class exampleAuto extends SequentialCommandGroup {
   public exampleAuto(Swerve s_Swerve) {
-    ArrayList<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("test",
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("test",
         new PathConstraints(Constants.AutoConstants.kMaxSpeedMetersPerSecond,
             Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared));
 
