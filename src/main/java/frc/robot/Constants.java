@@ -1,12 +1,23 @@
 package frc.robot;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
@@ -30,7 +41,14 @@ public final class Constants {
 
   public static final class Vision {
     public static final String cameraName = "gloworm";
-    public static final Translation3d cameraPosition = new Translation3d(0.32, 0, 0);
+    public static final Transform3d cameraToRobot = new Transform3d(new Translation3d(-0.32, 0, 0), new Rotation3d());
+    public static final Transform3d robotToCamera = cameraToRobot.inverse();
+
+    public static final List<Pose3d> targetPoses = Collections.unmodifiableList(List.of(
+        new Pose3d(3.0, 1.165, 0.287 + 0.165, new Rotation3d(0, 0, Units.degreesToRadians(180.0))),
+        new Pose3d(3.0, 0.0, 0.287 + .165, new Rotation3d(0, 0, Units.degreesToRadians(180.0)))));
+    public static final Matrix<N3, N1> visionMeasurementStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.5, 0.5,
+        Units.degreesToRadians(7));
   }
 
   public static final class Operators {
@@ -52,12 +70,17 @@ public final class Constants {
     public static final int pigeonID = 21;
     public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
     public static final String pigeonCanBUS = "canivore3161";
+    public static final Matrix<N1, N1> localMeasurementsStdDevs = new MatBuilder<>(Nat.N1(), Nat.N1())
+        .fill(Units.degreesToRadians(1));
 
     /* Drivetrain Constants */
     public static final double trackWidth = Units.inchesToMeters(23.0);
     public static final double wheelBase = Units.inchesToMeters(23.0);
     public static final double wheelDiameter = Units.inchesToMeters(4.0);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
+
+    public static final Matrix<N3, N1> stateStdDevs = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.05, 0.05,
+        Units.degreesToRadians(2));
 
     public static final double openLoopRamp = 0.25;
     public static final double closedLoopRamp = 0.0;
